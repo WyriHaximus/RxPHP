@@ -1638,18 +1638,28 @@ class Observable implements ObservableInterface
 
     /**
      * Take only one element from sequence at specified index.
-     * First element in sequence have index 0.
      *
      * @param int $index
+     * @param mixed $default
      * @return AnonymousObservable
      *
      * @demo elementAt/elementAt.php
      * @operator
      * @reactivex elementAt
      */
-    public function elementAt($index){
-        return $this->lift(function () use ($index) {
-            return new ElementAtOperator($index);
-        });
+    public function elementAt($index, $default = null)
+    {
+        if (!is_integer($index) || $index < 0) {
+            return Observable::error(new \InvalidArgumentException());
+        }
+        
+        $default = $default === null
+            ? Observable::error(new \OutOfRangeException())
+            : Observable::just($default);
+        
+        return $this
+            ->skip($index)
+            ->defaultIfEmpty($default)
+            ->take(1);
     }
 }

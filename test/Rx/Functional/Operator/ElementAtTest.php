@@ -55,6 +55,10 @@ class ElementAtTest extends FunctionalTestCase
             onNext(600, 14),
             onCompleted(600),
         ), $results->getMessages());
+
+        $this->assertSubscriptions([
+            subscribe(200,600)
+        ], $xs->getSubscriptions());
     }
 
     /**
@@ -84,7 +88,120 @@ class ElementAtTest extends FunctionalTestCase
         });
 
         $this->assertMessages(array(
-            onError(230, $error),
+            onError(231, $error),
         ), $results->getMessages());
+    }
+
+    /**
+     * Adapted from RxJS
+     *
+     * @test
+     */
+    public function elementAt_First()
+    {
+        $xs = $this->createHotObservable([
+            onNext(280, 42),
+            onNext(360, 43),
+            onNext(470, 44),
+            onCompleted(600)
+        ]);
+
+        $results = $this->scheduler->startWithCreate(function () use ($xs) {
+            return $xs->elementAt(0);
+        });
+
+        $this->assertMessages([
+            onNext(280, 42),
+            onCompleted(280)
+        ], $results->getMessages());
+
+        $this->assertSubscriptions([
+            subscribe(200, 280)
+        ], $xs->getSubscriptions());
+    }
+
+    /**
+     * Adapted from RxJS
+     *
+     * @test
+     */
+    public function elementAt_Other()
+    {
+        $xs = $this->createHotObservable([
+            onNext(280, 42),
+            onNext(360, 43),
+            onNext(470, 44),
+            onCompleted(600)
+        ]);
+
+        $results = $this->scheduler->startWithCreate(function () use ($xs) {
+            return $xs->elementAt(2);
+        });
+
+        $this->assertMessages([
+            onNext(470, 44),
+            onCompleted(470)
+        ], $results->getMessages());
+
+        $this->assertSubscriptions([
+            subscribe(200, 470)
+        ], $xs->getSubscriptions());
+    }
+
+    /**
+     * Adapted from RxJS
+     *
+     * @test
+     */
+    public function elementAt_out_of_range()
+    {
+        $xs = $this->createHotObservable([
+            onNext(280, 42),
+            onNext(360, 43),
+            onNext(470, 44),
+            onCompleted(600)
+        ]);
+
+        $results = $this->scheduler->startWithCreate(function () use ($xs) {
+            return $xs->elementAt(3);
+        });
+
+        $this->assertMessages([
+            onError(601, new \OutOfRangeException())
+        ], $results->getMessages());
+
+        $this->assertSubscriptions([
+            subscribe(200, 600)
+        ], $xs->getSubscriptions());
+    }
+
+    /**
+     * Adapted from RxJS
+     *
+     * This is not enabled because the RxPHP implementation does not accept 
+     *
+     * @test
+     */
+    public function elementAt_out_of_range_default()
+    {
+        $xs = $this->createHotObservable([
+            onNext(280, 42),
+            onNext(360, 43),
+            onNext(470, 44),
+            onCompleted(600)
+        ]);
+
+        $results = $this->scheduler->startWithCreate(function () use ($xs) {
+            return $xs->elementAt(3, 84);
+        });
+
+        $this->assertMessages([
+            onNext(601, 84),
+            onCompleted(601)
+        ], $results->getMessages());
+
+        $this->assertSubscriptions([
+            subscribe(200, 600)
+        ], $xs->getSubscriptions());
     }
 }
