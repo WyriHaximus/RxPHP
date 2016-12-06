@@ -17,10 +17,10 @@ function run_demo($file) {
         return false;
     }
     $expected = file_get_contents($file . '.expect');
-    echo "Output from " . $file . ":";
-    echo "\n----------\n";
-    echo $output;
-    echo "\n----------\n";
+//    echo "Output from " . $file . ":";
+//    echo "\n----------\n";
+//    echo $output;
+//    echo "\n----------\n";
     return trim($output) == trim($expected);
 }
 
