@@ -24,15 +24,7 @@ $source = Observable::fromArray($times)
         return Observable::just($item['value'])
             ->delay($item['time']);
     })
-    ->timestamp()
-    ->map(function (Timestamped $t) {
-        return $t->getTimestampMillis() . ": " . $t->getValue();
-    })
-    ->throttle(300 /* ms */)
-    ->timestamp()
-    ->map(function (Timestamped $t) {
-        return $t->getTimestampMillis() . ": " . $t->getValue();
-    });
+    ->throttle(300 /* ms */);
 
 $subscription = $source->subscribe($stdoutObserver, $scheduler);
 
