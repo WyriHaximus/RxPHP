@@ -11,11 +11,11 @@ $loop      = Factory::create();
 $scheduler = new EventLoopScheduler($loop);
 
 $times = [
-    ['value' => 0, 'time' => 100],
-    ['value' => 1, 'time' => 600],
-    ['value' => 2, 'time' => 350],
-    ['value' => 3, 'time' => 900],
-    ['value' => 4, 'time' => 200]
+    ['value' => 0, 'time' => 10],
+    ['value' => 1, 'time' => 200],
+    ['value' => 2, 'time' => 400],
+    ['value' => 3, 'time' => 500],
+    ['value' => 4, 'time' => 900]
 ];
 
 // Delay each item by time and project value;
