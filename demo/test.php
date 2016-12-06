@@ -18,6 +18,7 @@ function run_demo($file) {
     }
     $expected = file_get_contents($file . '.expect');
     echo "Output from " . $file . ":\n";
+    echo $output;
     return trim($output) == trim($expected);
 }
 
