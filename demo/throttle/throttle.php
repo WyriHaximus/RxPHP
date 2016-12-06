@@ -3,6 +3,7 @@
 use React\EventLoop\Factory;
 use Rx\Observable;
 use Rx\Scheduler\EventLoopScheduler;
+use Rx\Timestamped;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -23,7 +24,15 @@ $source = Observable::fromArray($times)
         return Observable::just($item['value'])
             ->delay($item['time']);
     })
-    ->throttle(300 /* ms */);
+    ->timestamp()
+    ->map(function (Timestamped $t) {
+        return $t->getTimestampMillis() . ": " . $t->getValue();
+    })
+    ->throttle(300 /* ms */)
+    ->timestamp()
+    ->map(function (Timestamped $t) {
+        return $t->getTimestampMillis() . ": " . $t->getValue();
+    });
 
 $subscription = $source->subscribe($stdoutObserver, $scheduler);
 

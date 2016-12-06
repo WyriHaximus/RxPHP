@@ -17,6 +17,7 @@ function run_demo($file) {
         return false;
     }
     $expected = file_get_contents($file . '.expect');
+    echo "Output from " . $file . ":\n";
     return trim($output) == trim($expected);
 }
 
@@ -37,6 +38,10 @@ function strip_cwd($cwd, $absolute_path) {
 }
 
 function main($cwd) {
+    if (defined('HHVM_VERSION')) {
+        echo "Skipping demo tests on HHVM.\n";
+        return 0;
+    }
     $demos = array_filter(find_demos(__DIR__), 'has_expect');
 
     echo sprintf("Found %d demos with an expect file.\n", count($demos));
