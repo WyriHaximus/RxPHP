@@ -7,6 +7,7 @@ use Rx\Scheduler\EventLoopScheduler;
 require_once __DIR__ . '/../bootstrap.php';
 
 $loop      = Factory::create();
+echo "Using " . get_class($loop) . "\n";
 $scheduler = new EventLoopScheduler($loop);
 
 $times = [
